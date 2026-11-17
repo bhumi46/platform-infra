@@ -40,6 +40,10 @@ module "environments" {
   environments = local.environments
 }
 
+module "backstage_access" {
+  source = "../../modules/backstage-access"
+}
+
 module "argocd" {
   source = "../../modules/argocd"
 

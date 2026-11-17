@@ -17,6 +17,13 @@ resource "helm_release" "argocd" {
       params = {
         "server.insecure" = true
       }
+      # "backstage": API-token-only account with read-only access, used by the Backstage Argo CD plugin.
+      cm = {
+        "accounts.backstage" = "apiKey"
+      }
+      rbac = {
+        "policy.csv" = "g, backstage, role:readonly"
+      }
     }
     server = {
       service = {

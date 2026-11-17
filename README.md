@@ -25,6 +25,17 @@ modules/argocd/         argo-cd chart (insecure, NodePort) + argocd-apps chart w
 envs/local/             wires the modules; environments/*.yaml = one file per environment
 ```
 
+## Backstage access (read-only)
+
+`modules/backstage-access` creates ServiceAccount `backstage/backstage-reader` with a get/list/watch-only ClusterRole, and a token Secret. `modules/argocd` adds an API-token-only Argo CD account `backstage` with `role:readonly`. Backstage reads them via:
+
+```sh
+terraform output -raw kube_api_url
+terraform output -raw backstage_k8s_sa_token   # sensitive
+```
+
+`backstage/scripts/cluster-tokens.sh` copies these (plus a fresh Argo CD token) into `backstage/.env` without printing them.
+
 ## Adding an environment
 
 Add `envs/local/environments/<env>.yaml` and run `terraform apply`:

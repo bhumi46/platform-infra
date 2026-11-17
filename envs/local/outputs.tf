@@ -13,3 +13,14 @@ output "argocd_admin_password_cmd" {
 output "environments" {
   value = module.environments.namespaces
 }
+
+output "kube_api_url" {
+  description = "Kubernetes API server URL reachable from this machine."
+  value       = module.cluster.endpoint
+}
+
+output "backstage_k8s_sa_token" {
+  description = "Read-only ServiceAccount token for Backstage (terraform output -raw backstage_k8s_sa_token)."
+  value       = module.backstage_access.token
+  sensitive   = true
+}
