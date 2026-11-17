@@ -1,0 +1,24 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: platform-infra
+  description: Terraform for the kind cluster, environments (namespaces + quotas) and Argo CD bootstrap.
+  annotations:
+    github.com/project-slug: bhumi46/platform-infra
+spec:
+  type: infrastructure
+  lifecycle: experimental
+  owner: group:platform-team
+  system: idp-lab
+  dependsOn:
+    - resource:idp-lab-cluster
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: idp-lab-cluster
+  description: Local kind cluster (1 control plane + 1 worker) running Argo CD.
+spec:
+  type: kubernetes-cluster
+  owner: group:platform-team
+  system: idp-lab

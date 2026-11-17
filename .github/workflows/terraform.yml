@@ -1,0 +1,60 @@
+name: terraform
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+env:
+  TF_VERSION: 1.8.5
+  WORKDIR: envs/local
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+      - name: fmt
+        run: terraform fmt -check -recursive
+      - name: init
+        working-directory: ${{ env.WORKDIR }}
+        run: terraform init -backend=false -input=false
+      - name: validate
+        working-directory: ${{ env.WORKDIR }}
+        run: terraform validate
+
+  # A hosted runner can't reach your laptop, so on merge we prove the code works end-to-end
+  # on a throwaway kind cluster inside the runner, then tear it down.
+  apply-ephemeral:
+    if: github.event_name == 'push'
+    needs: validate
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: hashicorp/setup-terraform@v4.0.1
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
+      - name: init
+        working-directory: ${{ env.WORKDIR }}
+        run: terraform init -input=false
+      - name: apply
+        working-directory: ${{ env.WORKDIR }}
+        run: terraform apply -auto-approve -input=false
+      - name: smoke test
+        working-directory: ${{ env.WORKDIR }}
+        run: |
+          export KUBECONFIG="$(terraform output -raw kubeconfig_path)"
+          kubectl get ns argocd dev staging
+          kubectl get pods -A
+          kubectl -n argocd get applications.argoproj.io root
+      - name: destroy
+        if: always()
+        working-directory: ${{ env.WORKDIR }}
+        run: terraform destroy -auto-approve -input=false
