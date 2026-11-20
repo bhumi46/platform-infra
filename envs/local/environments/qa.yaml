@@ -1,0 +1,4 @@
+owner: platform-team
+cpu: "2"
+memory: 4Gi
+max_pods: 20
