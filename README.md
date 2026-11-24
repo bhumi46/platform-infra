@@ -22,6 +22,7 @@ Tear down: `terraform destroy`.
 modules/kind-cluster/   kind cluster: 1 control plane + 1 worker, NodePort 30080 -> localhost:8080
 modules/environments/   per env: Namespace + ResourceQuota + LimitRange
 modules/argocd/         argo-cd chart (insecure, NodePort) + argocd-apps chart with the "root" app
+modules/cnpg/           CloudNativePG operator (namespace cnpg-system); service charts declare their own Postgres `Cluster`
 envs/local/             wires the modules; environments/*.yaml = one file per environment
 ```
 
@@ -60,6 +61,7 @@ The Backstage "New environment" template opens a PR that adds exactly this file.
 | kind CLI (local) | v0.33.0 |
 | Node image | `kindest/node:v1.37.0@sha256:a1ed56cfb0e7b93589bdf97c8cd566405a265939e3620fc4f5de89adff580ae5` |
 | Chart `argo/argo-cd` | 10.18.0 (Argo CD v3.6.1) |
+| Chart `cnpg/cloudnative-pg` | 0.29.1 (CloudNativePG operator 1.30.1) |
 | Chart `argo/argocd-apps` | 2.0.8 |
 | Action `actions/checkout` | v7.0.1 |
 | Action `hashicorp/setup-terraform` | v4.0.1 |

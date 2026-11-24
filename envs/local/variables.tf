@@ -14,6 +14,12 @@ variable "argocd_host_port" {
   default = 8080
 }
 
+variable "cnpg_chart_version" {
+  description = "cloudnative-pg chart (operator 1.30.1)."
+  type        = string
+  default     = "0.29.1"
+}
+
 variable "argocd_chart_version" {
   type    = string
   default = "10.18.0"

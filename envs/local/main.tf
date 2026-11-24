@@ -44,6 +44,13 @@ module "backstage_access" {
   source = "../../modules/backstage-access"
 }
 
+# PostgreSQL operator for services that need a database (Python services).
+module "cnpg" {
+  source = "../../modules/cnpg"
+
+  chart_version = var.cnpg_chart_version
+}
+
 module "argocd" {
   source = "../../modules/argocd"
 

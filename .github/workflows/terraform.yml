@@ -54,6 +54,8 @@ jobs:
           kubectl get ns argocd dev staging
           kubectl get pods -A
           kubectl -n argocd get applications.argoproj.io root
+          kubectl -n cnpg-system rollout status deploy/cnpg-cloudnative-pg --timeout=120s
+          kubectl get crd clusters.postgresql.cnpg.io
       - name: destroy
         if: always()
         working-directory: ${{ env.WORKDIR }}

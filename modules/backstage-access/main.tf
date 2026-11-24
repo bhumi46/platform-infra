@@ -57,6 +57,12 @@ resource "kubernetes_cluster_role_v1" "reader" {
     resources  = ["ingresses"]
     verbs      = ["get", "list", "watch"]
   }
+  # CloudNativePG databases of the Python services (shown as a custom resource in Backstage).
+  rule {
+    api_groups = ["postgresql.cnpg.io"]
+    resources  = ["clusters"]
+    verbs      = ["get", "list", "watch"]
+  }
 }
 
 resource "kubernetes_cluster_role_binding_v1" "reader" {
